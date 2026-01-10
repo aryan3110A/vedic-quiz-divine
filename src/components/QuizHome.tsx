@@ -18,13 +18,13 @@ const QuizHome = ({ onCategorySelect, onQASelect }: QuizHomeProps) => {
     //   color: "from-sacred-saffron to-divine-gold"
     // },
     {
-      name: "શિક્ષાપત્રી",
+      name: "હેતુલક્ષી પ્રશ્નો ( MCQ )",
       icon: ScrollText,
       description: "શિક્ષાપત્રીના ધર્મો અને આજ્ઞાઓનું જ્ઞાન કસો",
       color: "from-sacred-saffron to-divine-gold"
     },
     {
-      name: "Q&A Shikshapatri",
+      name: "પ્રશ્નોત્તરી ( Q&A )",
       icon: MessageCircle,
       description: "Explore the divine teachings through questions and answers",
       color: "from-temple-maroon to-accent",
