@@ -9,6 +9,8 @@ interface FlipbookViewerProps {
     onClose: () => void;
 }
 
+import swaminarayanBg from "@/assets/swaminarayan-bg.jpg";
+
 export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps) {
     const [scriptsLoaded, setScriptsLoaded] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -138,8 +140,18 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center animate-in fade-in zoom-in duration-300"
-            style={{ background: 'radial-gradient(#2b2b2b, #0f0f0f)', padding: '40px', touchAction: 'none' }}
+            style={{ padding: '40px', touchAction: 'none' }}
         >
+            {/* Background Image with Overlay */}
+            <div
+                className="absolute inset-0 bg-cover bg-center -z-10"
+                style={{
+                    backgroundImage: `url(${swaminarayanBg})`,
+                    filter: 'brightness(0.3) blur(2px)'
+                }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/95 -z-10" />
+
             <button
                 onClick={onClose}
                 className="absolute top-4 right-4 z-[60] p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
@@ -149,6 +161,7 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
             <div
                 ref={containerRef}
                 id="df_book_viewer"
+                className="relative z-10"
                 style={{ height: '100%', width: '100%' }}
             />
         </div>
