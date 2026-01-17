@@ -121,8 +121,9 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 duration: isTV ? 400 : 800, // Faster transitions on TV
                 direction: 1, // LTR
                 forceFit: true,
-                disablePartialLoad: true,
-                pdfRenderQuality: isTV ? 0.6 : 0.75, // Even lower quality on TV
+                disablePartialLoad: isTV ? false : true, // CRITICAL: Enable partial load on TV to prevent hanging
+                pdfRenderQuality: isTV ? 0.5 : 0.75, // Even lower quality on TV (50%) for faster worker initialization
+                maxTextureSize: isTV ? 1024 : 2048, // Limit texture size on TV
             };
 
             console.log("dflip options:", options);
