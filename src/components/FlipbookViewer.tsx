@@ -75,10 +75,22 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
             console.log("Initializing Flipbook for:", pdfUrl);
             const $ = (window as any).jQuery;
 
-            // Ensure defaults are set before initialization
-            if ((window as any).DFLIP) {
-                // Remove stiffness override to allow natural bending as requested ("inner pages bend softly")
-                // (window as any).DFLIP.defaults.stiffness = 3; 
+            // Inject CSS to hide ONLY the Toggle Outline/Bookmark button and sidebar
+            const styleId = 'hide-df-outline-style';
+            if (!document.getElementById(styleId)) {
+                const style = document.createElement('style');
+                style.id = styleId;
+                style.innerHTML = `
+                    .df-ui-btn[title*="Toggle Outline"], 
+                    .df-ui-btn[title*="Bookmark"],
+                    .df-ui-outline,
+                    .df-ui-btn-outline,
+                    .ti-menu-alt,
+                    .df-ui-sidemenu {
+                        display: none !important;
+                    }
+                `;
+                document.head.appendChild(style);
             }
 
             // Detect TV or low-power devices
@@ -91,7 +103,7 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
             const options = {
                 source: pdfUrl,
                 height: '100%',
-                width: '100%', // Explicitly set width to 100% as per new request snippet
+                width: '100%',
 
                 // Core 3D settings - DISABLED ON TV for performance
                 webgl: !isTV,
@@ -101,7 +113,7 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 // Real book feel
                 pageMode: "double",
                 singlePageMode: false,
-                hard: isTV ? "none" : "cover", // Disable hard cover on TV
+                hard: isTV ? "none" : "cover",
 
                 // Shadows & depth - minimal on TV
                 shadowOpacity: isTV ? 0 : 0.1,
@@ -111,29 +123,19 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 coverThickness: isTV ? 0 : 12,
                 pageThickness: isTV ? 0 : 2,
 
-                // Texture & realism
-                // texture: "paper", // Can be enabled if assets exist, but staying safe with CSS defaults
-
                 // End-book feel
                 endPageFlip: true,
 
                 backgroundColor: "transparent",
-                duration: isTV ? 400 : 800, // Faster transitions on TV
-                direction: 1, // LTR
+                duration: isTV ? 400 : 800,
+                direction: 1,
                 forceFit: true,
-                disablePartialLoad: isTV ? false : true, // CRITICAL: Enable partial load on TV to prevent hanging
-                pdfRenderQuality: isTV ? 0.5 : 1.5, // HIGH QUALITY for local APK (150%)
-                maxTextureSize: isTV ? 1024 : 4096, // Maximum texture size for best quality
-
-                // Completely disable thumbnail sidebar
-                enableThumbs: false,
-                thumbLayout: "none"
+                disablePartialLoad: isTV ? false : true,
+                pdfRenderQuality: isTV ? 0.5 : 1.5,
+                maxTextureSize: isTV ? 1024 : 4096,
             };
 
             console.log("dflip options:", options);
-
-            // If instance already exists, maybe destroy it? dflip is tricky with react re-renders
-            // $(containerRef.current).html(''); // Clear container
 
             bookInstanceRef.current = $(containerRef.current).flipBook(pdfUrl, options);
         }
