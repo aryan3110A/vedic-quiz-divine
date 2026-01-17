@@ -114,8 +114,8 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 duration: 800,
                 direction: 1, // LTR
                 forceFit: true,
-                disablePartialLoad: true, // User Request: Load pages before turning
-                pdfRenderQuality: 0.9,
+                disablePartialLoad: false, // Enable partial loading for faster initial display on TV
+                pdfRenderQuality: 0.75, // Reduced for better TV performance
             };
 
             // If instance already exists, maybe destroy it? dflip is tricky with react re-renders
