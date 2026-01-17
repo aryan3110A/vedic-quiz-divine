@@ -122,8 +122,12 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 direction: 1, // LTR
                 forceFit: true,
                 disablePartialLoad: isTV ? false : true, // CRITICAL: Enable partial load on TV to prevent hanging
-                pdfRenderQuality: isTV ? 0.5 : 0.75, // Even lower quality on TV (50%) for faster worker initialization
-                maxTextureSize: isTV ? 1024 : 2048, // Limit texture size on TV
+                pdfRenderQuality: isTV ? 0.5 : 1.5, // HIGH QUALITY for local APK (150%)
+                maxTextureSize: isTV ? 1024 : 4096, // Maximum texture size for best quality
+
+                // Hide sidebar/thumbnail panel
+                controls: "hide", // Hide all controls including thumbnails
+                sideMenuOverlay: true, // Make side menu overlay instead of taking space
             };
 
             console.log("dflip options:", options);
