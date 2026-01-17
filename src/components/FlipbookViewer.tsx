@@ -125,9 +125,9 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 pdfRenderQuality: isTV ? 0.5 : 1.5, // HIGH QUALITY for local APK (150%)
                 maxTextureSize: isTV ? 1024 : 4096, // Maximum texture size for best quality
 
-                // Hide sidebar/thumbnail panel
-                controls: "hide", // Hide all controls including thumbnails
-                sideMenuOverlay: true, // Make side menu overlay instead of taking space
+                // Completely disable thumbnail sidebar
+                enableThumbs: false,
+                thumbLayout: "none"
             };
 
             console.log("dflip options:", options);
