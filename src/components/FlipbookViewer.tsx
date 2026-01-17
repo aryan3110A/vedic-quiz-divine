@@ -81,28 +81,35 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 // (window as any).DFLIP.defaults.stiffness = 3; 
             }
 
+            // Detect TV or low-power devices
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isTV = /tv|smarttv|googletv|appletv|hbbtv|pov_tv|netcast|webos|smart-tv/i.test(userAgent) ||
+                /tizen|opera tv|sonydtv|philips|panasonic/i.test(userAgent);
+
+            console.log("Device detection - isTV:", isTV);
+
             const options = {
                 source: pdfUrl,
                 height: '100%',
                 width: '100%', // Explicitly set width to 100% as per new request snippet
 
-                // Core 3D settings
-                webgl: true,
-                flipbook3D: true, // User requested
-                realistic3D: true, // User requested
+                // Core 3D settings - DISABLED ON TV for performance
+                webgl: !isTV,
+                flipbook3D: !isTV,
+                realistic3D: !isTV,
 
                 // Real book feel
                 pageMode: "double",
                 singlePageMode: false,
-                hard: "cover", // User requested
+                hard: isTV ? "none" : "cover", // Disable hard cover on TV
 
-                // Shadows & depth
-                shadowOpacity: 0.1, // Updated opacity
+                // Shadows & depth - minimal on TV
+                shadowOpacity: isTV ? 0 : 0.1,
 
-                // Hard cover detail (keeping these as they complement the 'hard: all' setting)
-                cover: true,
-                coverThickness: 12,
-                pageThickness: 2,
+                // Hard cover detail (disabled on TV)
+                cover: !isTV,
+                coverThickness: isTV ? 0 : 12,
+                pageThickness: isTV ? 0 : 2,
 
                 // Texture & realism
                 // texture: "paper", // Can be enabled if assets exist, but staying safe with CSS defaults
@@ -111,12 +118,14 @@ export default function FlipbookViewer({ pdfUrl, onClose }: FlipbookViewerProps)
                 endPageFlip: true,
 
                 backgroundColor: "transparent",
-                duration: 800,
+                duration: isTV ? 400 : 800, // Faster transitions on TV
                 direction: 1, // LTR
                 forceFit: true,
-                disablePartialLoad: false, // Enable partial loading for faster initial display on TV
-                pdfRenderQuality: 0.75, // Reduced for better TV performance
+                disablePartialLoad: true,
+                pdfRenderQuality: isTV ? 0.6 : 0.75, // Even lower quality on TV
             };
+
+            console.log("dflip options:", options);
 
             // If instance already exists, maybe destroy it? dflip is tricky with react re-renders
             // $(containerRef.current).html(''); // Clear container
